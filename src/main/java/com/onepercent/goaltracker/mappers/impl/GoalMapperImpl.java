@@ -9,6 +9,7 @@ import com.onepercent.goaltracker.mappers.TaskMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class GoalMapperImpl implements GoalMapper {
@@ -21,7 +22,7 @@ public class GoalMapperImpl implements GoalMapper {
     public Goal fromGoalDto(GoalDto goalDto) {
         List<Task> taskList = goalDto.taskDtoList().stream().map(taskMapper::fromDto).toList();
         return Goal.builder()
-                .id(goalDto.id())
+                .id(UUID.fromString(goalDto.id()))
                 .title(goalDto.title())
                 .description(goalDto.description())
                 .tasks(taskList)
@@ -30,6 +31,6 @@ public class GoalMapperImpl implements GoalMapper {
 
     public GoalDto toGoalDto(Goal goal) {
         List<TaskDto> taskDtoList = goal.getTasks().stream().map(taskMapper::toDto).toList();
-        return new GoalDto(goal.getId(), goal.getTitle(), goal.getDescription(), taskDtoList);
+        return new GoalDto(goal.getId().toString(), goal.getTitle(), goal.getDescription(), taskDtoList);
     }
 }

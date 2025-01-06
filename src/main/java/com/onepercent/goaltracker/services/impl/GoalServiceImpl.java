@@ -34,12 +34,9 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public void createGoal(Goal goal) {
-        var result = goalRepository.existsById(goal.getId());
-        if(result) throw new RuntimeException("Goal already exist");
-
+        canCreateOrThrow(goal.getId());
         goal.setCreated(LocalDateTime.now());
         goal.setUpdated(LocalDateTime.now());
-
         log.info("Creation of goals title {} for this user {}", goal.getTitle(), goal.getUser().getId());
         goalRepository.save(goal);
     }
@@ -51,12 +48,20 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void updateGoal(Goal goal) {
-        var result = goalRepository.existsById(goal.getId());
-        if(! result){
-            throw new NullPointerException(String.format("Goal with id %s does not exist", goal.getId()));
-        }
+    public void updateGoal(UUID uuid, Goal goal) {
+        this.canUpdateOrThrow(uuid);
         log.info("Update of goals title {} for this user {}", goal.getTitle(), goal.getUser().getId());
         goalRepository.save(goal);
     }
+
+    private void canUpdateOrThrow(UUID uuid){
+        var result = goalRepository.existsById(uuid);
+        if(! result) throw new NullPointerException(String.format("Goal with id %s does not exist",uuid));
+    }
+
+    private void canCreateOrThrow(UUID uuid){
+        var result = goalRepository.existsById(uuid);
+        if(result) throw new RuntimeException("Goal already exist");
+    }
+
 }

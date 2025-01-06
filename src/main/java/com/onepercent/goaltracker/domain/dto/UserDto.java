@@ -1,7 +1,9 @@
 package com.onepercent.goaltracker.domain.dto;
 
-import java.util.List;
-import java.util.UUID;
+import com.onepercent.goaltracker.domain.entities.Goal;
 
-public record UserDto(UUID uuid, String username, List<GoalDto> goalDtoList) {
+import java.util.List;
+
+public record UserDto(String uuid, String username, List<GoalDto> goalList){
+
 }

@@ -44,10 +44,10 @@ public class TaskController {
         return ResponseEntity.status(201).build();
     }
 
-    @PostMapping
-    public ResponseEntity<String> updateTask(@RequestBody TaskDto taskDto){
+    @PostMapping("/{taskId}")
+    public ResponseEntity<String> updateTask(@PathVariable("taskId") UUID uuid, @RequestBody TaskDto taskDto){
         var task = taskMapper.fromDto(taskDto);
-        taskService.updateTask(task);
+        taskService.updateTask(uuid, task);
         return ResponseEntity.status(202).build();
     }
 

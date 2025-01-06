@@ -49,9 +49,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void updateTask(Task task) {
-        var existentTask = taskRepository.findById(task.getId());
-
+    public void updateTask(UUID uuid, Task task) {
+        var existentTask = taskRepository.findById(uuid);
         if(existentTask.isEmpty()){
             throw new NullPointerException(String.format("Task with id %s does not exist", task.getId()));
         }

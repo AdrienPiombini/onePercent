@@ -4,10 +4,7 @@ import com.onepercent.goaltracker.domain.dto.UserDto;
 import com.onepercent.goaltracker.mappers.UserMapper;
 import com.onepercent.goaltracker.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -30,11 +27,12 @@ public class UserController {
         return ResponseEntity.status(201).build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody UUID uuid){
-        var result = userService.getUser(uuid);
-        var userDto = userMapper.toDto(result);
-        return ResponseEntity.ok(userDto);
+        @PostMapping("/login")
+        public ResponseEntity<UserDto> login(@RequestBody UUID uuid){
+            var result = userService.getUser(uuid);
+            var userDto = userMapper.toDto(result);
+            return ResponseEntity.ok(userDto);
 
-    }
+        }
+
 }

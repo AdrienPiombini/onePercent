@@ -2,10 +2,8 @@ package com.onepercent.goaltracker.controllers;
 
 import com.onepercent.goaltracker.domain.dto.GoalDto;
 import com.onepercent.goaltracker.mappers.GoalMapper;
-import com.onepercent.goaltracker.repositories.GoalRepository;
 import com.onepercent.goaltracker.services.GoalService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,14 +42,14 @@ public class GoalController {
         return ResponseEntity.status(201).build();
     }
 
-    @PostMapping
-    public ResponseEntity<String> updateGoal(@RequestBody GoalDto goalDto){
+    @PostMapping(path = "goal_id")
+    public ResponseEntity<String> updateGoal(@PathVariable("goal_id")UUID uuid, @RequestBody GoalDto goalDto){
         var goal = goalMapper.fromGoalDto(goalDto);
-        goalService.updateGoal(goal);
+        goalService.updateGoal(uuid, goal);
         return ResponseEntity.status(202).build();
     }
 
-    @DeleteMapping("/{goal_id")
+    @DeleteMapping("/{goal_id}")
     public ResponseEntity<String> deleteGoal(@PathVariable("goal_id") UUID uuid){
         goalService.deleteGoal(uuid);
         return ResponseEntity.noContent().build();

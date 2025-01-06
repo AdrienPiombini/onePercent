@@ -5,9 +5,11 @@ import com.onepercent.goaltracker.repositories.UserRepository;
 import com.onepercent.goaltracker.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -18,10 +20,9 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void createUser(User user) {
-        var result = userRepository.existsById(user.getId());
-        if(result) throw new RuntimeException("User already exist");
-
-        log.info("Creation user {}", user.getId());
+        if(user.getId() != null) throw new RuntimeException("User already exist");
+        if(user.getGoals() != null) throw new RuntimeException("Register user cannot have goals already set");
+        log.info("Creation user {}", user);
         userRepository.save(user);
     }
 

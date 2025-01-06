@@ -10,5 +10,5 @@ public interface GoalService {
     Goal getGoal(UUID uuid);
     void createGoal(Goal goal);
     void deleteGoal(UUID uuid);
-    void updateGoal(Goal goal);
+    void updateGoal(UUID uuid, Goal goal);
 }

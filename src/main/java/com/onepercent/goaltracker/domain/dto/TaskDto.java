@@ -5,6 +5,6 @@ import com.onepercent.goaltracker.domain.entities.TaskStatus;
 import java.util.UUID;
 
 public record TaskDto(
-        UUID id, String title, String description, TaskStatus status
+        String id, String title, String description, TaskStatus status
 ) {
 }

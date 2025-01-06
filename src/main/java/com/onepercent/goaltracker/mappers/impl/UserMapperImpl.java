@@ -9,6 +9,8 @@ import com.onepercent.goaltracker.mappers.UserMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -19,9 +21,14 @@ public class UserMapperImpl implements UserMapper {
     }
     @Override
     public User fromDto(UserDto userDto) {
-        List<Goal> goalList = userDto.goalDtoList().stream().map(goalMapper::fromGoalDto).toList();
+        List<Goal> goalList = userDto.goalList() != null ? userDto.goalList().stream().map(goalMapper::fromGoalDto).toList() : null;
+        UUID uuid = null;
+        if(userDto.uuid() != null) {
+            uuid = UUID.fromString(userDto.uuid());
+        }
+
         return User.builder()
-                .id(userDto.uuid())
+                .id(uuid)
                 .username(userDto.username())
                 .goals(goalList)
                 .build();
@@ -30,6 +37,6 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public UserDto toDto(User user) {
         List<GoalDto> goalDtoList = user.getGoals().stream().map(goalMapper::toGoalDto).toList();
-        return new UserDto(user.getId(), user.getUsername(), goalDtoList);
+        return new UserDto(user.getId().toString(), user.getUsername(), goalDtoList);
     }
 }
