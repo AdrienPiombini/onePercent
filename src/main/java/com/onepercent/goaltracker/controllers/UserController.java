@@ -4,12 +4,14 @@ import com.onepercent.goaltracker.domain.dto.UserDto;
 import com.onepercent.goaltracker.mappers.UserMapper;
 import com.onepercent.goaltracker.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "users")
+@Validated
 public class UserController {
 
     private final UserMapper userMapper;

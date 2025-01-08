@@ -21,7 +21,7 @@ public class UserMapperImpl implements UserMapper {
     }
     @Override
     public User fromDto(UserDto userDto) {
-        List<Goal> goalList = userDto.goalList() != null ? userDto.goalList().stream().map(goalMapper::fromGoalDto).toList() : null;
+//        List<Goal> goalList = userDto.goalList() != null ? userDto.goalList().stream().map(goalMapper::fromGoalDto).toList() : null;
         UUID uuid = null;
         if(userDto.uuid() != null) {
             uuid = UUID.fromString(userDto.uuid());
@@ -30,13 +30,13 @@ public class UserMapperImpl implements UserMapper {
         return User.builder()
                 .id(uuid)
                 .username(userDto.username())
-                .goals(goalList)
+//                .goals(goalList)
                 .build();
     }
 
     @Override
     public UserDto toDto(User user) {
-        List<GoalDto> goalDtoList = user.getGoals().stream().map(goalMapper::toGoalDto).toList();
-        return new UserDto(user.getId().toString(), user.getUsername(), goalDtoList);
+//        List<GoalDto> goalDtoList = user.getGoals().stream().map(goalMapper::toGoalDto).toList();
+        return new UserDto(user.getId().toString(), user.getUsername(), user.getExternalId());
     }
 }

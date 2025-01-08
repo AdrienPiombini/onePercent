@@ -21,6 +21,6 @@ public class TaskMapperImpl implements TaskMapper {
 
     @Override
     public TaskDto toDto(Task task) {
-        return new TaskDto(task.getId().toString(), task.getTitle(), task.getDescription(), task.getStatus());
+        return new TaskDto(task.getId().toString(), task.getTitle(), task.getDescription(), task.getStatus(), task.getGoalId().toString());
     }
 }

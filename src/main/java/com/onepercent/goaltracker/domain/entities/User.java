@@ -2,6 +2,8 @@ package com.onepercent.goaltracker.domain.entities;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
     UUID id;
+    @Column(nullable = false)
     String username;
-    @OneToMany(mappedBy = "user", cascade = {
-            CascadeType.REMOVE, CascadeType.PERSIST
-    })
-    List<Goal> goals;
+    String externalId;
 }

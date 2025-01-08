@@ -20,17 +20,17 @@ public class GoalMapperImpl implements GoalMapper {
     }
 
     public Goal fromGoalDto(GoalDto goalDto) {
-        List<Task> taskList = goalDto.taskDtoList().stream().map(taskMapper::fromDto).toList();
+//        List<Task> taskList = goalDto.taskDtoList().stream().map(taskMapper::fromDto).toList();
         return Goal.builder()
                 .id(UUID.fromString(goalDto.id()))
                 .title(goalDto.title())
                 .description(goalDto.description())
-                .tasks(taskList)
+//                .tasks(taskList)
                 .build();
     }
 
     public GoalDto toGoalDto(Goal goal) {
-        List<TaskDto> taskDtoList = goal.getTasks().stream().map(taskMapper::toDto).toList();
-        return new GoalDto(goal.getId().toString(), goal.getTitle(), goal.getDescription(), taskDtoList);
+//        List<TaskDto> taskDtoList = goal.getTasks().stream().map(taskMapper::toDto).toList();
+        return new GoalDto(goal.getId().toString(), goal.getTitle(), goal.getDescription(), goal.getUserId().toString());
     }
 }

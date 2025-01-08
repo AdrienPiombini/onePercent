@@ -34,10 +34,10 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public void createGoal(Goal goal) {
-        canCreateOrThrow(goal.getId());
+        canCreateOrThrow(goal);
         goal.setCreated(LocalDateTime.now());
         goal.setUpdated(LocalDateTime.now());
-        log.info("Creation of goals title {} for this user {}", goal.getTitle(), goal.getUser().getId());
+        log.info("Creation of goals title {} for this user {}", goal.getTitle());
         goalRepository.save(goal);
     }
 
@@ -50,7 +50,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public void updateGoal(UUID uuid, Goal goal) {
         this.canUpdateOrThrow(uuid);
-        log.info("Update of goals title {} for this user {}", goal.getTitle(), goal.getUser().getId());
+        log.info("Update of goals title {} for this user {}", goal.getTitle());
         goalRepository.save(goal);
     }
 
@@ -59,8 +59,8 @@ public class GoalServiceImpl implements GoalService {
         if(! result) throw new NullPointerException(String.format("Goal with id %s does not exist",uuid));
     }
 
-    private void canCreateOrThrow(UUID uuid){
-        var result = goalRepository.existsById(uuid);
+    private void canCreateOrThrow(Goal goal){
+        var result = goalRepository.existsById(goal.getId());
         if(result) throw new RuntimeException("Goal already exist");
     }
 

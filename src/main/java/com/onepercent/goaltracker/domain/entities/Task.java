@@ -20,10 +20,11 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
     UUID id;
+    @Column(nullable = false)
     String title;
     String description;
+    @Column(nullable = false)
     TaskStatus status;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goal_id")
-    Goal goal;
+    @Column(nullable = false)
+    UUID goalId;
 }
