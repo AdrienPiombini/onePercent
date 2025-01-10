@@ -28,7 +28,7 @@ public class GlobalExceptionControllerHandler {
                 request.getDescription(false));
 
         log.info(exception.getMessage());
-        log.info(exception.getStackTrace().toString());
+        log.info(Arrays.toString(exception.getStackTrace()));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
     }

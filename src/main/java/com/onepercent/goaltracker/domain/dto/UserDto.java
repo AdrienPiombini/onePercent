@@ -1,9 +1,11 @@
 package com.onepercent.goaltracker.domain.dto;
 
-import com.onepercent.goaltracker.domain.entities.Goal;
+import jakarta.validation.constraints.NotBlank;
 
-import java.util.List;
-
-public record UserDto(String uuid, String username, List<GoalDto> goalList){
-
+public record UserDto(
+        String uuid,
+        @NotBlank(message = "Username is required")
+        String username,
+        String externalId
+){
 }

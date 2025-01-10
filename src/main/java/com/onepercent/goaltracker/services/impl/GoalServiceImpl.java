@@ -2,6 +2,7 @@ package com.onepercent.goaltracker.services.impl;
 
 import com.onepercent.goaltracker.domain.entities.Goal;
 import com.onepercent.goaltracker.repositories.GoalRepository;
+import com.onepercent.goaltracker.repositories.UserRepository;
 import com.onepercent.goaltracker.services.GoalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,11 @@ import java.util.UUID;
 public class GoalServiceImpl implements GoalService {
     private static final Logger log = LoggerFactory.getLogger(GoalServiceImpl.class);
     private final GoalRepository goalRepository;
+    private final UserRepository userRepository;
 
-    public GoalServiceImpl(GoalRepository goalRepository) {
+    public GoalServiceImpl(GoalRepository goalRepository, UserRepository userRepository) {
         this.goalRepository = goalRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,10 +37,10 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public void createGoal(Goal goal) {
-        canCreateOrThrow(goal.getId());
+        canCreateOrThrow(goal);
         goal.setCreated(LocalDateTime.now());
         goal.setUpdated(LocalDateTime.now());
-        log.info("Creation of goals title {} for this user {}", goal.getTitle(), goal.getUser().getId());
+        log.info("Creation of goals title {} for this user {}", goal.getTitle());
         goalRepository.save(goal);
     }
 
@@ -50,7 +53,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public void updateGoal(UUID uuid, Goal goal) {
         this.canUpdateOrThrow(uuid);
-        log.info("Update of goals title {} for this user {}", goal.getTitle(), goal.getUser().getId());
+        log.info("Update of goals title {} for this user {}", goal.getTitle());
         goalRepository.save(goal);
     }
 
@@ -59,9 +62,10 @@ public class GoalServiceImpl implements GoalService {
         if(! result) throw new NullPointerException(String.format("Goal with id %s does not exist",uuid));
     }
 
-    private void canCreateOrThrow(UUID uuid){
-        var result = goalRepository.existsById(uuid);
-        if(result) throw new RuntimeException("Goal already exist");
+    private void canCreateOrThrow(Goal goal){
+        if(goal.getId() != null) throw new RuntimeException("Goal already exist");
+        var user = userRepository.existsById(goal.getUserId());
+        if(!user) throw new RuntimeException("Need a valid user");
     }
 
 }

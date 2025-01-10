@@ -35,7 +35,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void createTask(Task task) {
-        log.info("Creation of task {} for this user {}", task.getTitle(), task.getGoal().getUser().getId());
+        log.info("Creation of task {} for this user {}", task.getTitle(), task.getGoalId());
         if(task.getStatus() == null){
             task.setStatus(TaskStatus.TODO);
         }

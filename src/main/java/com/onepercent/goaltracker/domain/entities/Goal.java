@@ -21,15 +21,11 @@ public class Goal {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
     UUID id;
+    @Column(nullable = false)
     String title;
     String description;
-    @OneToMany(mappedBy = "goal", cascade = {
-            CascadeType.REMOVE, CascadeType.PERSIST
-    })
-    List<Task> tasks;
     LocalDateTime created;
     LocalDateTime updated;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    User user;
+    @Column(nullable = false)
+    UUID userId;
 }

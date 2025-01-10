@@ -21,7 +21,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(User user) {
         if(user.getId() != null) throw new RuntimeException("User already exist");
-        if(user.getGoals() != null) throw new RuntimeException("Register user cannot have goals already set");
         log.info("Creation user {}", user);
         userRepository.save(user);
     }
