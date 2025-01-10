@@ -2,6 +2,7 @@ package com.onepercent.goaltracker.services.impl;
 
 import com.onepercent.goaltracker.domain.entities.Goal;
 import com.onepercent.goaltracker.repositories.GoalRepository;
+import com.onepercent.goaltracker.repositories.UserRepository;
 import com.onepercent.goaltracker.services.GoalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,11 @@ import java.util.UUID;
 public class GoalServiceImpl implements GoalService {
     private static final Logger log = LoggerFactory.getLogger(GoalServiceImpl.class);
     private final GoalRepository goalRepository;
+    private final UserRepository userRepository;
 
-    public GoalServiceImpl(GoalRepository goalRepository) {
+    public GoalServiceImpl(GoalRepository goalRepository, UserRepository userRepository) {
         this.goalRepository = goalRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -60,8 +63,9 @@ public class GoalServiceImpl implements GoalService {
     }
 
     private void canCreateOrThrow(Goal goal){
-        var result = goalRepository.existsById(goal.getId());
-        if(result) throw new RuntimeException("Goal already exist");
+        if(goal.getId() != null) throw new RuntimeException("Goal already exist");
+        var user = userRepository.existsById(goal.getUserId());
+        if(!user) throw new RuntimeException("Need a valid user");
     }
 
 }

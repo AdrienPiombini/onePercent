@@ -14,23 +14,20 @@ import java.util.UUID;
 @Component
 public class GoalMapperImpl implements GoalMapper {
 
-    private final TaskMapper taskMapper;
-    public GoalMapperImpl(final TaskMapperImpl taskMapper){
-        this.taskMapper = taskMapper;
-    }
-
     public Goal fromGoalDto(GoalDto goalDto) {
-//        List<Task> taskList = goalDto.taskDtoList().stream().map(taskMapper::fromDto).toList();
+        UUID uuid = null;
+        if(goalDto.id() != null) {
+            uuid = UUID.fromString(goalDto.id());
+        }
         return Goal.builder()
-                .id(UUID.fromString(goalDto.id()))
+                .id(uuid)
                 .title(goalDto.title())
                 .description(goalDto.description())
-//                .tasks(taskList)
+                .userId(UUID.fromString(goalDto.userId()))
                 .build();
     }
 
     public GoalDto toGoalDto(Goal goal) {
-//        List<TaskDto> taskDtoList = goal.getTasks().stream().map(taskMapper::toDto).toList();
         return new GoalDto(goal.getId().toString(), goal.getTitle(), goal.getDescription(), goal.getUserId().toString());
     }
 }
