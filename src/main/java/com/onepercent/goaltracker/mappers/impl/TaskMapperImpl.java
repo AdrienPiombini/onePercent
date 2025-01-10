@@ -14,13 +14,20 @@ public class TaskMapperImpl implements TaskMapper {
     public Task fromDto(TaskDto taskDto) {
         return Task.builder()
                 .id(UUID.fromString(taskDto.id()))
+                .title(taskDto.title())
                 .description(taskDto.description())
                 .status(taskDto.status())
+                .goalId(UUID.fromString(taskDto.goalId()))
                 .build();
     }
 
     @Override
     public TaskDto toDto(Task task) {
-        return new TaskDto(task.getId().toString(), task.getTitle(), task.getDescription(), task.getStatus(), task.getGoalId().toString());
+        return new TaskDto(
+                task.getId().toString(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getStatus(),
+                task.getGoalId().toString());
     }
 }

@@ -2,38 +2,44 @@ package com.onepercent.goaltracker.mappers.impl;
 
 import com.onepercent.goaltracker.domain.dto.GoalDto;
 import com.onepercent.goaltracker.domain.entities.Goal;
-import com.onepercent.goaltracker.domain.entities.User;
-import com.onepercent.goaltracker.mappers.GoalMapper;
-import com.onepercent.goaltracker.mappers.TaskMapper;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 class GoalMapperImplTest {
 
     private final GoalMapperImpl goalMapper = new GoalMapperImpl();
 
     @Test
     void fromGoalDto() {
-        GoalDto goalDto = new GoalDto("6bda75f5-8fe8-4be5-8aaf-4dbe7fd1a778", "Gain muscle", "Bench 100kg", "Fake UserID");
+        var goalDto = new GoalDto(UUID.randomUUID().toString(), "Gain muscle", "Bench 100kg", UUID.randomUUID().toString());
 
-        Goal goal = goalMapper.fromGoalDto(goalDto);
+        var result = goalMapper.fromGoalDto(goalDto);
 
-        assertThat(goal.getId()).isEqualTo(goalDto.id());
-        assertThat(goal.getTitle()).isEqualTo(goalDto.title());
-        assertThat(goal.getDescription()).isEqualTo(goalDto.description());
-        assertThat(goal.getUserId()).isEqualTo(goalDto.userId());
+        assertThat(result.getId().toString()).isEqualTo(goalDto.id());
+        assertThat(result.getTitle()).isEqualTo(goalDto.title());
+        assertThat(result.getDescription()).isEqualTo(goalDto.description());
+        assertThat(result.getUserId().toString()).isEqualTo(goalDto.userId());
     }
 
     @Test
     void toGoalDto() {
+        var goal = Goal.builder().id(UUID.randomUUID())
+                .title("Fake Title")
+                .description("Fake Description")
+                .created(LocalDateTime.now())
+                .updated(LocalDateTime.now())
+                .userId(UUID.randomUUID())
+                .build();
+
+        var result = goalMapper.toGoalDto(goal);
+
+        assertThat(result.id()).isEqualTo(goal.getId().toString());
+        assertThat(result.description()).isEqualTo(goal.getDescription());
+        assertThat(result.title()).isEqualTo(goal.getTitle());
+        assertThat(result.userId()).isEqualTo(goal.getUserId().toString());
     }
 }
