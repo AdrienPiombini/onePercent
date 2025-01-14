@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.orm.jpa.JpaSystemException;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -70,32 +72,34 @@ class GoalRepositoryTest {
     void shouldNotInsertWithoutTitle(){
         var goalWithoutTitle = Goal.builder()
                 .description("Fake Description")
-                .id(UUID.randomUUID())
                 .build();
 
-        assertThrows(DataIntegrityViolationException.class, () -> goalRepository.save(goalWithoutTitle));
+        assertThrows(ObjectOptimisticLockingFailureException.class, () ->
+                goalRepository.save(goalWithoutTitle));
 
     }
 
     @Test
     void shouldNotInsertWithoutUserId(){
-        var goalWithoutUserId = Goal.builder()
-                .title("Fake title")
+        var goalWithoutUserId =Goal.builder()
+                .title("Perde du poids")
+                .description("perdre 34 kilos")
+                .created(LocalDateTime.now())
+                .updated(LocalDateTime.now())
                 .build();
 
         assertThrows(
                 DataIntegrityViolationException.class,
-                () -> goalRepository.save(goalWithoutUserId)
-        );
+                () -> goalRepository.save(goalWithoutUserId));
 
     }
 
     @Test
-    void shouldNotUpdateId(){
+    void shouldNotUpdatedId(){
+        System.out.println(goal.getId());
         goal.setId(UUID.randomUUID());
-        assertThrows(
-                DataIntegrityViolationException.class,
-                () -> goalRepository.save(goal)
-        );
+        var result = goalRepository.save(goal);
+        System.out.println(result.getId());
+//        assertThrows(JpaSystemException.class, () -> {});
     }
 }

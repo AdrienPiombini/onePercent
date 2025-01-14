@@ -25,6 +25,6 @@ public class Goal {
     String description;
     LocalDateTime created;
     LocalDateTime updated;
-    @Column(nullable = false)
+    @Column(updatable = false, nullable = false)
     UUID userId;
 }
