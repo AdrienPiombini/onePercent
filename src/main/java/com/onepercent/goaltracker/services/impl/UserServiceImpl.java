@@ -1,5 +1,6 @@
 package com.onepercent.goaltracker.services.impl;
 
+import com.onepercent.goaltracker.Utils.ServiceResult;
 import com.onepercent.goaltracker.domain.entities.User;
 import com.onepercent.goaltracker.repositories.UserRepository;
 import com.onepercent.goaltracker.services.UserService;
@@ -19,22 +20,44 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
     @Override
-    public void createUser(User user) {
-        if(user.getId() != null) throw new RuntimeException("User already exist");
+    public ServiceResult<?> createUser(User user) {
+        if(user.getId() != null){
+            return ServiceResult.error("User already exist");
+        }
         log.info("Creation user {}", user);
-        userRepository.save(user);
+        var result = userRepository.save(user);
+        return ServiceResult.ok(result);
     }
 
     @Override
-    public void deleteUser(UUID uuid) {
+    public ServiceResult<User> getUser(UUID uuid) {
+        var user = userRepository.findById(uuid);
+        return user.map(ServiceResult::ok)
+                .orElseGet(() -> ServiceResult.error(String.format("The user %s does not exist", uuid)));
+    }
+
+    @Override
+    public ServiceResult<?> updateUser(User user) {
+        var canUpdate = userExist(user.getId());
+        if(!canUpdate) return ServiceResult.error(String.format("The user %s does not exist", user.getId()));
+        userRepository.save(user);
+        return ServiceResult.ok(null);
+    }
+
+    @Override
+    public ServiceResult<?> deleteUser(UUID uuid) {
+        // no check if exist to respect idempotency pattern
         log.info("Deletion of the user {}", uuid);
         userRepository.deleteById(uuid);
+        return ServiceResult.ok(null);
     }
 
-    @Override
-    public User getUser(UUID uuid) {
+    private void findUserOrThrow(UUID uuid){
         var user = userRepository.findById(uuid);
         if(user.isEmpty()) throw new NullPointerException(String.format("The user %s does not exist", uuid));
-        return user.get();
+    }
+
+    private boolean userExist(UUID uuid){
+        return userRepository.existsById(uuid);
     }
 }

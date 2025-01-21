@@ -3,6 +3,7 @@ package com.onepercent.goaltracker.controllers;
 import com.onepercent.goaltracker.domain.dto.UserDto;
 import com.onepercent.goaltracker.mappers.UserMapper;
 import com.onepercent.goaltracker.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +26,20 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDto userDto){
         var user = userMapper.fromDto(userDto);
-        userService.createUser(user);
+        var result = userService.createUser(user);
+        if( ! result.isSuccess()){
+            return ResponseEntity.badRequest().body(result.getMessage());
+        }
         return ResponseEntity.status(201).build();
     }
 
         @PostMapping("/login")
-        public ResponseEntity<UserDto> login(@RequestBody UUID uuid){
+        public ResponseEntity<?> login(@RequestBody UUID uuid){
             var result = userService.getUser(uuid);
-            var userDto = userMapper.toDto(result);
+            if( ! result.isSuccess()){
+                return ResponseEntity.badRequest().body(result.getMessage());
+            }
+            var userDto = userMapper.toDto(result.getData());
             return ResponseEntity.ok(userDto);
 
         }
