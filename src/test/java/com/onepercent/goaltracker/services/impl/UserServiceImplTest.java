@@ -1,5 +1,6 @@
 package com.onepercent.goaltracker.services.impl;
 
+import com.onepercent.goaltracker.Utils.ServiceResult;
 import com.onepercent.goaltracker.domain.entities.User;
 import com.onepercent.goaltracker.repositories.UserRepository;
 import com.onepercent.goaltracker.services.UserService;
@@ -85,13 +86,24 @@ class UserServiceImplTest {
 
     @Test
     void shouldNotUpdate(){
+        var noExistentUser = User.builder()
+                .id(UUID.randomUUID())
+                .build();
+        var result = userService.updateUser(noExistentUser);
 
+        assertFalse(result.isSuccess());
     }
 
     @Test
     void shouldUpdated(){
+        user.setUsername("New UserName");
 
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+        when(userRepository.save(user)).thenReturn(user);
+        var result =  userService.updateUser(user);
+
+        assertTrue(result.isSuccess());
+        assertEquals(result.getData(), user);
     }
-
 
 }

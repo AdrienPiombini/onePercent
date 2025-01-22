@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
     public ServiceResult<?> updateUser(User user) {
         var canUpdate = userExist(user.getId());
         if(!canUpdate) return ServiceResult.error(String.format("The user %s does not exist", user.getId()));
-        userRepository.save(user);
-        return ServiceResult.ok(null);
+        var result = userRepository.save(user);
+        return ServiceResult.ok(result);
     }
 
     @Override
