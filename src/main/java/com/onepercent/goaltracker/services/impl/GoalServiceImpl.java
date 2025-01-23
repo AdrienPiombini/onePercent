@@ -1,5 +1,6 @@
 package com.onepercent.goaltracker.services.impl;
 
+import com.onepercent.goaltracker.Utils.ServiceResult;
 import com.onepercent.goaltracker.domain.entities.Goal;
 import com.onepercent.goaltracker.repositories.GoalRepository;
 import com.onepercent.goaltracker.repositories.UserRepository;
@@ -24,48 +25,63 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public List<Goal> getAllGoals() {
-        return goalRepository.findAll();
+    public ServiceResult<List<Goal>> getAllGoals() {
+        var result = goalRepository.findAll();
+
+        return ServiceResult.ok(result);
     }
 
     @Override
-    public Goal getGoal(UUID uuid) {
+    public ServiceResult<Goal> getGoal(UUID uuid) {
         var result = goalRepository.findById(uuid);
-        if(result.isEmpty()) throw new NullPointerException("this id does not exist");
-        return result.get();
+        return result.map(ServiceResult::ok)
+                .orElseGet(() -> ServiceResult.error("this id does not exist"));
+
     }
 
     @Override
-    public void createGoal(Goal goal) {
-        canCreateOrThrow(goal);
+    public ServiceResult<?> createGoal(Goal goal) {
+        var canCreate = canCreate(goal);
+        if(! canCreate){
+            return ServiceResult.error("Goal should have valid user, and non-existent id");
+        }
+
         goal.setCreated(LocalDateTime.now());
         goal.setUpdated(LocalDateTime.now());
-        log.info("Creation of goals title {} for this user {}", goal.getTitle());
+
+        log.info("Creation of goals title {} for this user {}", goal.getTitle(), goal.getUserId());
         goalRepository.save(goal);
+
+        return ServiceResult.ok(null);
     }
 
     @Override
-    public void deleteGoal(UUID uuid) {
+    public ServiceResult<?> deleteGoal(UUID uuid) {
         log.info("Delete goals id {}", uuid);
         goalRepository.deleteById(uuid);
+
+        return ServiceResult.ok(null);
     }
 
     @Override
-    public void updateGoal(UUID uuid, Goal goal) {
-        this.canUpdateOrThrow(uuid);
-        log.info("Update of goals title {} for this user {}", goal.getTitle());
+    public ServiceResult<?> updateGoal(UUID uuid, Goal goal) {
+        var canUpdate = canUpdate(uuid);
+
+        if(! canUpdate){
+            return ServiceResult.error(String.format("UUID : %s is not valid", uuid));
+        }
+        log.info("Update of goals title {} for this user {}", goal.getTitle(), goal.getUserId());
         goalRepository.save(goal);
+        return ServiceResult.ok(null);
     }
 
-    private void canUpdateOrThrow(UUID uuid){
-        var result = goalRepository.existsById(uuid);
-        if(! result) throw new NullPointerException(String.format("Goal with id %s does not exist",uuid));
+    private boolean canUpdate(UUID uuid){
+        return goalRepository.existsById(uuid);
     }
 
-    private void canCreateOrThrow(Goal goal){
-        if(goal.getId() != null) throw new RuntimeException("Goal already exist");
-        var user = userRepository.existsById(goal.getUserId());
-        if(!user) throw new RuntimeException("Need a valid user");
+    private boolean canCreate(Goal goal){
+        if(goal.getId() != null) return false;
+        return userRepository.existsById(goal.getUserId());
     }
 
 }

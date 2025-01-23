@@ -3,6 +3,8 @@ package com.onepercent.goaltracker.Utils;
 
 import lombok.Getter;
 
+import java.util.Optional;
+
 @Getter
 public class ServiceResult<T> {
     private final boolean success;
