@@ -1,10 +1,7 @@
 package com.onepercent.goaltracker.services.impl;
 
-import com.onepercent.goaltracker.Utils.ServiceResult;
 import com.onepercent.goaltracker.domain.entities.User;
 import com.onepercent.goaltracker.repositories.UserRepository;
-import com.onepercent.goaltracker.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,17 +23,11 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private User user;
-
-    @BeforeEach
-    void setup(){
-        user = User.builder()
+    private final User user = User.builder()
                 .id(UUID.randomUUID())
                 .username("Foo")
                 .externalId("Bar")
                 .build();
-        userRepository.save(user);
-    }
 
     @Test
     void shouldNotCreateUser(){
