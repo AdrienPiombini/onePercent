@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +25,6 @@ public class Goal {
     String description;
     LocalDateTime created;
     LocalDateTime updated;
-    @Column(nullable = false)
+    @Column(updatable = false, nullable = false)
     UUID userId;
 }
