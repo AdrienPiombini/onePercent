@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,4 +27,6 @@ public class User {
     @Column(nullable = false)
     String username;
     String externalId;
+    LocalDateTime created;
+    LocalDateTime updated;
 }
