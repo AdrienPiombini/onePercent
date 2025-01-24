@@ -11,6 +11,7 @@ public record TaskDto(
         String title,
         String description,
         TaskStatus status,
+        @NotBlank(message = "Goal ID is required")
         String goalId
 ) {
 }

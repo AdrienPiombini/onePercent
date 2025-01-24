@@ -3,6 +3,7 @@ package com.onepercent.goaltracker.services.impl;
 import com.onepercent.goaltracker.Utils.ServiceResult;
 import com.onepercent.goaltracker.domain.entities.Task;
 import com.onepercent.goaltracker.domain.entities.TaskStatus;
+import com.onepercent.goaltracker.repositories.GoalRepository;
 import com.onepercent.goaltracker.repositories.TaskRepository;
 import com.onepercent.goaltracker.services.TaskService;
 import org.slf4j.Logger;
@@ -15,10 +16,12 @@ import java.util.UUID;
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
+    private final GoalRepository goalRepository;
     private final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    public TaskServiceImpl(final TaskRepository taskRepository){
+    public TaskServiceImpl(final TaskRepository taskRepository, GoalRepository goalRepository){
         this.taskRepository = taskRepository;
+        this.goalRepository = goalRepository;
     }
 
     @Override
@@ -36,10 +39,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public ServiceResult<?> createTask(Task task) {
+        var canCreateTask = canCreate(task);
+        if( ! canCreateTask){
+            return ServiceResult.error("Goal Id does not exist");
+        }
+
         log.info("Creation of task {} for this user {}", task.getTitle(), task.getGoalId());
         if(task.getStatus() == null){
             task.setStatus(TaskStatus.TODO);
         }
+
         var result = taskRepository.save(task);
         return ServiceResult.ok(result);
     }
@@ -53,17 +62,24 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ServiceResult<?> updateTask(UUID uuid, Task task) {
+    public ServiceResult<Task> updateTask(UUID uuid, Task task) {
         var existentTask = taskRepository.findById(uuid);
+
         if(existentTask.isEmpty()){
-            throw new NullPointerException(String.format("Task with id %s does not exist", task.getId()));
+            return ServiceResult.error(String.format("Task with id %s does not exist", task.getId()));
         }
 
         if(task.getStatus() == null){
             task.setStatus(existentTask.get().getStatus());
         }
+
         var result = taskRepository.save(task);
 
         return ServiceResult.ok(result);
+    }
+
+    private boolean canCreate(Task task) {
+        assert(task.getGoalId() != null);
+        return goalRepository.existsById(task.getGoalId());
     }
 }
