@@ -1,14 +1,15 @@
 package com.onepercent.goaltracker.services;
 
+import com.onepercent.goaltracker.utils.ServiceResult;
 import com.onepercent.goaltracker.domain.entities.Goal;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface GoalService {
-    List<Goal> getAllGoals();
-    Goal getGoal(UUID uuid);
-    void createGoal(Goal goal);
-    void deleteGoal(UUID uuid);
-    void updateGoal(UUID uuid, Goal goal);
+    ServiceResult<List<Goal>> getAllGoals();
+    ServiceResult<Goal> getGoal(UUID uuid);
+    ServiceResult<?> createGoal(Goal goal);
+    ServiceResult<?> deleteGoal(UUID uuid);
+    ServiceResult<?> updateGoal(UUID uuid, Goal goal);
 }

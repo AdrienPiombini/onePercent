@@ -1,4 +1,4 @@
-package com.onepercent.goaltracker.Utils;
+package com.onepercent.goaltracker.utils;
 
     public record ErrorResponse(int statusCode, String message, String details){
 }

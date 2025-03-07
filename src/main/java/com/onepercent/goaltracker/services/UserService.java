@@ -1,11 +1,13 @@
 package com.onepercent.goaltracker.services;
 
+import com.onepercent.goaltracker.utils.ServiceResult;
 import com.onepercent.goaltracker.domain.entities.User;
 
 import java.util.UUID;
 
 public interface UserService {
-    void createUser(User user);
-    void deleteUser(UUID uuid);
-    User getUser(UUID uuid);
+    ServiceResult<?> createUser(User user);
+    ServiceResult<?> deleteUser(UUID uuid);
+    ServiceResult<User> getUser(UUID uuid);
+    ServiceResult<?> updateUser(User user);
 }
