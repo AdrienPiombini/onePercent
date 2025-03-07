@@ -25,14 +25,14 @@ public class GoalController {
     @GetMapping
     public ResponseEntity<List<GoalDto>> getAllGoals(){
         var goalList = goalService.getAllGoals();
-        var goalListDto = goalList.stream().map(goalMapper::toGoalDto).toList();
+        var goalListDto = goalList.getData().stream().map(goalMapper::toGoalDto).toList();
         return ResponseEntity.ok(goalListDto);
     }
 
     @GetMapping(path = "/{goal_id}")
     public ResponseEntity<GoalDto> getGoal(@PathVariable("goal_id")UUID uuid){
         var goal = goalService.getGoal(uuid);
-        var goalDto = goalMapper.toGoalDto(goal);
+        var goalDto = goalMapper.toGoalDto(goal.getData());
         return ResponseEntity.ok(goalDto);
     }
 

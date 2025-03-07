@@ -36,6 +36,7 @@ public class GoalServiceImpl implements GoalService {
         var result = goalRepository.findById(uuid);
         return result.map(ServiceResult::ok)
                 .orElseGet(() -> ServiceResult.error("this id does not exist"));
+
     }
 
     @Override
