@@ -4,7 +4,6 @@ import com.onepercent.goaltracker.Utils.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +16,7 @@ public class GlobalExceptionControllerHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionControllerHandler.class);
 
-    @ExceptionHandler({RuntimeException.class, NullPointerException.class})
+    @ExceptionHandler({RuntimeException.class, NullPointerException.class, Exception.class})
     public ResponseEntity<ErrorResponse> handleExceptions(
             RuntimeException exception, WebRequest request
     ){
@@ -30,7 +29,6 @@ public class GlobalExceptionControllerHandler {
         log.info(exception.getMessage());
         log.info(Arrays.toString(exception.getStackTrace()));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-
     }
 }
 
